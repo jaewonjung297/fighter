@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements Model{
     private final Texture stillImage;
     private final Texture runningImage;
     private final TextureRegion currentRegion;
@@ -20,7 +20,6 @@ public class Player {
     public int jumpsLeft = 2;
     public int health;
     public int facingDirection;
-    private boolean inAttack = false;
     public PlayerStatus playerStatus;
     public Player() {
         this.stillImage = new Texture("stick.png");
@@ -33,6 +32,7 @@ public class Player {
         this.health = 100;
         this.facingDirection = 1;
     }
+    @Override
     public void update(ArrayList<Rectangle> platforms) {
         //update animation
         for (Rectangle platform: platforms) {
@@ -66,8 +66,8 @@ public class Player {
             hitbox.x = 800 - 64;
         }
     }
-
     public void attack(Dummy opponent) {
+        boolean inAttack = false;
         if (!inAttack) {
             Rectangle attackHitBox = new Rectangle(this.hitbox.x, this.hitbox.y, this.hitbox.width / 2 + 80, this.hitbox.height);
             if (attackHitBox.overlaps(opponent.hitbox)) {
@@ -91,12 +91,12 @@ public class Player {
         }
     }
 
-
+    @Override
     public void render(SpriteBatch batch) {
         updateCurrentRegion();
         batch.draw(currentRegion, hitbox.x, hitbox.y);
     }
-
+    @Override
     public void dispose() {
         stillImage.dispose();
         runningImage.dispose();

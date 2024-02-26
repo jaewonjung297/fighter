@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 
-public class Dummy {
+public class Dummy implements Model {
     private final Texture dummyImg;
     public Rectangle hitbox;
     public int health;
@@ -21,6 +21,8 @@ public class Dummy {
         this.velocityY = 0;
         this.onPlatform = false;
     }
+
+    @Override
     public void update(ArrayList<Rectangle> platforms) {
         for (Rectangle platform: platforms) {
             if (hitbox.overlaps(platform)) {
@@ -50,11 +52,11 @@ public class Dummy {
             hitbox.x = 800 - 64;
         }
     }
-
+    @Override
     public void render(SpriteBatch batch) {
         batch.draw(dummyImg,hitbox.x, hitbox.y);
     }
-
+    @Override
     public void dispose() {
         dummyImg.dispose();
     }

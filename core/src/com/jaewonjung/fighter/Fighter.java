@@ -3,15 +3,18 @@ package com.jaewonjung.fighter;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.jaewonjung.fighter.models.Dummy;
 import com.jaewonjung.fighter.models.Player;
 import com.jaewonjung.fighter.models.PlayerStatus;
+import com.jaewonjung.fighter.models.PlayerInputProcessor;
 
 import java.util.ArrayList;
 
@@ -37,6 +40,8 @@ public class Fighter extends ApplicationAdapter {
 		platforms.add(platform2);
 		player = new Player();
 		dummy = new Dummy();
+		PlayerInputProcessor ip = new PlayerInputProcessor(player);
+		Gdx.input.setInputProcessor(ip);
 		keyPressed = false;
 	}
 
@@ -76,10 +81,8 @@ public class Fighter extends ApplicationAdapter {
 			//implement kinematic equations
 			//when the user jumps, up velocity is constant, and is constantly decreasing
 			keyPressed = true;
-			player.onPlatform = false;
-			player.velocityY =  player.jumpVelocity;
-			player.jumpsLeft -= 1;
 		}
+
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			keyPressed = true;
 			player.velocityY -= 80;

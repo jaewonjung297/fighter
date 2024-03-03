@@ -21,6 +21,7 @@ public class Player {
     public int health;
     public int facingDirection;
     private boolean inAttack = false;
+
     public PlayerStatus playerStatus;
     public Player() {
         this.stillImage = new Texture("stick.png");

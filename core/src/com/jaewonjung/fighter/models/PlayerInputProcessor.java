@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import java.util.Arrays;
+
 public class PlayerInputProcessor implements InputProcessor {
 
     private Player p;
@@ -14,9 +16,6 @@ public class PlayerInputProcessor implements InputProcessor {
 
     public PlayerInputProcessor(Player p) {
         this.p = p;
-        jumpTime = -1;
-        leftTime = -1;
-        rightTime = -1;
     }
 
     public boolean keyDown (int keycode) {
@@ -26,11 +25,15 @@ public class PlayerInputProcessor implements InputProcessor {
                     p.onPlatform = false;
                     p.velocityY = p.jumpVelocity;
                     p.jumpsLeft -= 1;
-                    jumpTime = TimeUtils.millis();
+                    p.keyTime[0] = TimeUtils.millis();
                     break;
                 }
-            case (Input.Keys.DOWN):
-                p.velocityY -= 100;
+            case Input.Keys.DOWN:
+                long currentTime = TimeUtils.millis();
+                if (currentTime - p.keyTime[0] < 200) {
+                    p.platformPass = true;
+                }
+                p.keyTime[0] = currentTime;
                 break;
             case Input.Keys.LEFT:
                 //p.velocityX = Math.min(0, p.velocityX - 400);
@@ -38,7 +41,7 @@ public class PlayerInputProcessor implements InputProcessor {
                 p.facingDirection = -1;
                 p.playerStatus = PlayerStatus.RUNNING;
                 p.movingDirection = -1;
-                leftTime = TimeUtils.millis();
+                p.keyTime[2] = TimeUtils.millis();
                 break;
             case Input.Keys.RIGHT:
                 //p.velocityX += 400;
@@ -46,7 +49,7 @@ public class PlayerInputProcessor implements InputProcessor {
                 p.velocityX = 400;
                 p.movingDirection = 1;
                 p.playerStatus = PlayerStatus.RUNNING;
-                rightTime = TimeUtils.millis();
+                p.keyTime[3] = TimeUtils.millis();
             default:
                 return false;
         }
@@ -56,13 +59,16 @@ public class PlayerInputProcessor implements InputProcessor {
     public boolean keyUp (int keycode) {
         switch (keycode) {
             case Input.Keys.UP:
-                float jumpDuration = TimeUtils.millis() - jumpTime;
+                float jumpDuration = TimeUtils.millis() - p.keyTime[0];
                 if (jumpDuration < 300) {
                     p.velocityY = Math.min(0, p.velocityY - 80);
                 }
                 break;
+            case Input.Keys.DOWN:
+
+                break;
             case Input.Keys.LEFT:
-                float leftDuration = TimeUtils.millis() - leftTime;
+                float leftDuration = TimeUtils.millis() - p.keyTime[2];
                 if (leftDuration < 300) {
                     p.velocityX = Math.min(0, p.velocityX + 200);
                 }
@@ -71,7 +77,7 @@ public class PlayerInputProcessor implements InputProcessor {
                 }
                 break;
             case Input.Keys.RIGHT:
-                float rightDuration = TimeUtils.millis() - rightTime;
+                float rightDuration = TimeUtils.millis() - p.keyTime[3];
                 if (rightDuration < 300) {
                     p.velocityX = Math.max(0, p.velocityX - 200);
                 }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Player {
     private final Texture stillImage;
@@ -18,11 +18,14 @@ public class Player {
     public float gravity = (float) - 2000;
     public float jumpVelocity = 800;
     public boolean onPlatform;
+    public HashMap<Rectangle, Boolean> canPass;
+    public boolean platformPass;
     public int jumpsLeft = 2;
     public int health;
     public int facingDirection;
     public int movingDirection;
     private boolean inAttack = false;
+    public long[] keyTime;
 
     public PlayerStatus playerStatus;
     public Player() {
@@ -34,22 +37,32 @@ public class Player {
         this.velocityY = 0;
         this.velocityX = 0;
         this.onPlatform = false;
+        this.canPass = new HashMap<>();
+        this.platformPass = false;
         this.health = 100;
         this.facingDirection = 0;
         this.movingDirection = 0;
+        this.keyTime = new long[4];
+        Arrays.fill(this.keyTime, -1);
     }
     public void update(ArrayList<Rectangle> platforms) {
         //update animation
+        onPlatform = false;
         for (Rectangle platform: platforms) {
+            canPass.putIfAbsent(platform, false);
+            if (hitbox.y <= platform.y) {
+                canPass.put(platform, true);
+            }
+            else {
+                canPass.put(platform, false);
+            }
             if (hitbox.overlaps(platform)) {
-                if (!onPlatform && velocityY < 0 && hitbox.y > platform.y) {
+                if (!onPlatform && !platformPass && !canPass.get(platform) && velocityY < 0 && hitbox.y > platform.y) {
                     velocityY = 0;
                     hitbox.y = platform.y + platform.height - 1;
                     onPlatform = true;
                     jumpsLeft = 2;
                 }
-            } else {
-                onPlatform = false;
             }
         }
         if (!onPlatform) {

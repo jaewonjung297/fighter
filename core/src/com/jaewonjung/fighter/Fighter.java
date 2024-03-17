@@ -71,6 +71,9 @@ public class Fighter extends ApplicationAdapter {
 				player.playerStatus = PlayerStatus.STILL;
 			}
 		}
+		if (player.platformPass && TimeUtils.millis() - player.keyTime[0] > 200) {
+			player.platformPass = false;
+		}
 
 	}
 	

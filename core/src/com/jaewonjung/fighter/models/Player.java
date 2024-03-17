@@ -13,6 +13,7 @@ public class Player {
     private final Texture runningImage;
     private final TextureRegion currentRegion;
     public final Rectangle hitbox;
+    public float velocityX;
     public float velocityY;
     public float gravity = (float) - 2000;
     public float jumpVelocity = 800;
@@ -20,6 +21,7 @@ public class Player {
     public int jumpsLeft = 2;
     public int health;
     public int facingDirection;
+    public int movingDirection;
     private boolean inAttack = false;
 
     public PlayerStatus playerStatus;
@@ -30,9 +32,11 @@ public class Player {
         this.playerStatus = PlayerStatus.STILL;
         this.hitbox = new Rectangle(368, 0, 30, 64);
         this.velocityY = 0;
+        this.velocityX = 0;
         this.onPlatform = false;
         this.health = 100;
-        this.facingDirection = 1;
+        this.facingDirection = 0;
+        this.movingDirection = 0;
     }
     public void update(ArrayList<Rectangle> platforms) {
         //update animation
@@ -52,6 +56,8 @@ public class Player {
             velocityY += gravity * Gdx.graphics.getDeltaTime();
             hitbox.y += velocityY * Gdx.graphics.getDeltaTime();
         }
+
+        hitbox.x += velocityX * Gdx.graphics.getDeltaTime();
 
         if (hitbox.y < 0) {
             hitbox.y = 0;

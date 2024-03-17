@@ -25,7 +25,6 @@ public class Fighter extends ApplicationAdapter {
 	private Dummy dummy;
 	final private ArrayList<Rectangle> platforms = new ArrayList<>();
 	private ShapeRenderer shape;
-	private boolean keyPressed;
 	@Override
 	public void create () {
 		camera = new OrthographicCamera();
@@ -42,7 +41,6 @@ public class Fighter extends ApplicationAdapter {
 		dummy = new Dummy();
 		PlayerInputProcessor ip = new PlayerInputProcessor(player);
 		Gdx.input.setInputProcessor(ip);
-		keyPressed = false;
 	}
 
 	@Override
@@ -63,36 +61,15 @@ public class Fighter extends ApplicationAdapter {
 			this.shape.rect(platform.x, platform.y, platform.width, platform.height);
 			this.shape.end();
 		}
-		keyPressed = false;
-		//making the object move with keyboard inputs
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			keyPressed = true;
-			player.hitbox.x -= 400 * Gdx.graphics.getDeltaTime();
-			player.facingDirection = -1;
-			player.playerStatus = PlayerStatus.RUNNING;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			keyPressed = true;
-			player.hitbox.x += 400 * Gdx.graphics.getDeltaTime();
-			player.facingDirection = 1;
-			player.playerStatus = PlayerStatus.RUNNING;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.jumpsLeft > 0) {
-			//implement kinematic equations
-			//when the user jumps, up velocity is constant, and is constantly decreasing
-			keyPressed = true;
-		}
-
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			keyPressed = true;
-			player.velocityY -= 80;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-			keyPressed = true;
-			player.attack(dummy);
-		}
-		if (!keyPressed) {
-			player.playerStatus = PlayerStatus.STILL;
+		if (player.movingDirection == 0 && player.velocityX != 0) {
+			if (player.velocityX > 0) {
+				player.velocityX = Math.max(0, player.velocityX - 1500 * Gdx.graphics.getDeltaTime());
+			} else {
+				player.velocityX = Math.min(0, player.velocityX + 1500 * Gdx.graphics.getDeltaTime());
+			}
+			if (player.velocityX == 0) {
+				player.playerStatus = PlayerStatus.STILL;
+			}
 		}
 
 	}

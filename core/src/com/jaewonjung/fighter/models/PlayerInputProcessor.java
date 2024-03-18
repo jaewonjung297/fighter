@@ -33,7 +33,11 @@ public class PlayerInputProcessor implements InputProcessor {
                 if (currentTime - p.keyTime[0] < 200) {
                     p.platformPass = true;
                 }
+                else {
+                    p.velocityY -= 400;
+                }
                 p.keyTime[0] = currentTime;
+
                 break;
             case Input.Keys.LEFT:
                 //p.velocityX = Math.min(0, p.velocityX - 400);

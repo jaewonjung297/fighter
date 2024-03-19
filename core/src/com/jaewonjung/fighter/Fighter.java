@@ -2,8 +2,7 @@ package com.jaewonjung.fighter;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,9 +14,19 @@ import com.jaewonjung.fighter.models.Dummy;
 import com.jaewonjung.fighter.models.Player;
 import com.jaewonjung.fighter.models.PlayerStatus;
 import com.jaewonjung.fighter.models.PlayerInputProcessor;
+import com.jaewonjung.fighter.screens.IntroScreen;
+import com.jaewonjung.fighter.screens.TrainingScreen;
 
 import java.util.ArrayList;
 
+public class Fighter extends Game {
+	@Override
+	public void create() {
+		setScreen(new TrainingScreen(this));
+	}
+}
+
+/*
 public class Fighter extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -85,3 +94,6 @@ public class Fighter extends ApplicationAdapter {
 	}
 
 }
+
+
+ */

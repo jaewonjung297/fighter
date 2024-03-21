@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.jaewonjung.fighter.Fighter;
 
 import java.util.*;
 
@@ -26,9 +27,10 @@ public class Player {
     public int movingDirection;
     private boolean inAttack = false;
     public long[] keyTime;
+    private Fighter game;
 
     public PlayerStatus playerStatus;
-    public Player() {
+    public Player(Fighter game) {
         this.stillImage = new Texture("stick.png");
         this.runningImage = new Texture("stick_running.png");
         this.currentRegion = new TextureRegion(stillImage);
@@ -43,6 +45,7 @@ public class Player {
         this.facingDirection = 0;
         this.movingDirection = 0;
         this.keyTime = new long[4];
+        this.game = game;
         Arrays.fill(this.keyTime, -1);
     }
     public void update(ArrayList<Rectangle> platforms) {
@@ -82,8 +85,8 @@ public class Player {
         if (hitbox.x < 0) {
             hitbox.x = 0;
         }
-        if (hitbox.x > 800 - 64) {
-            hitbox.x = 800 - 64;
+        if (hitbox.x > game.dimensions[0] - 64) {
+            hitbox.x = game.dimensions[0] - 64;
         }
     }
 

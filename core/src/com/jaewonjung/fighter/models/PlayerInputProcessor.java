@@ -26,8 +26,8 @@ public class PlayerInputProcessor implements InputProcessor {
                     p.velocityY = p.jumpVelocity;
                     p.jumpsLeft -= 1;
                     p.keyTime[0] = TimeUtils.millis();
-                    break;
                 }
+                break;
             case Input.Keys.DOWN:
                 long currentTime = TimeUtils.millis();
                 if (currentTime - p.keyTime[0] < 200) {

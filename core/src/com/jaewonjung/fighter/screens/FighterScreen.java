@@ -2,12 +2,15 @@ package com.jaewonjung.fighter.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.jaewonjung.fighter.Fighter;
 
 public abstract class FighterScreen implements Screen {
-    Game game;
+    final Fighter game;
+    public float time;
 
-    public FighterScreen (Game game) {
+    public FighterScreen (final Fighter game) {
         this.game = game;
+        this.time = 0f;
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.jaewonjung.fighter.Fighter;
 import com.jaewonjung.fighter.models.Dummy;
 import com.jaewonjung.fighter.models.Player;
 import com.jaewonjung.fighter.models.PlayerInputProcessor;
@@ -18,22 +19,21 @@ import java.util.ArrayList;
 
 public class TrainingScreen extends FighterScreen {
 
-    private SpriteBatch batch;
-    private OrthographicCamera camera;
     private Player player;
     private Dummy dummy;
     final private ArrayList<Rectangle> platforms = new ArrayList<>();
     private ShapeRenderer shape;
+    private OrthographicCamera camera;
 
-    public TrainingScreen (Game game) {
+    public TrainingScreen (final Fighter game) {
         super(game);
     }
 
     @Override
     public void show () {
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
-        batch = new SpriteBatch();
+        camera.setToOrtho(false, game.dimensions[0], game.dimensions[1]);
+        game.batch = new SpriteBatch();
         shape = new ShapeRenderer();
         Rectangle platform1 = new Rectangle();
         Rectangle platform2 = new Rectangle();
@@ -41,7 +41,7 @@ public class TrainingScreen extends FighterScreen {
         platform2.set(400, 200, 200, 20);
         platforms.add(platform1);
         platforms.add(platform2);
-        player = new Player();
+        player = new Player(game);
         dummy = new Dummy();
         PlayerInputProcessor ip = new PlayerInputProcessor(player);
         Gdx.input.setInputProcessor(ip);
@@ -49,14 +49,15 @@ public class TrainingScreen extends FighterScreen {
 
     @Override
     public void render (float delta) {
+        time += delta;
         //need to detect when unit is not over a platform
         ScreenUtils.clear(255, 255, 255, 0);
         camera.update();
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        player.render(batch);
-        dummy.render(batch);
-        batch.end();
+        game.batch.setProjectionMatrix(camera.combined);
+        game.batch.begin();
+        player.render(game.batch);
+        dummy.render(game.batch);
+        game.batch.end();
         player.update(platforms);
         dummy.update(platforms);
         for (Rectangle platform : platforms) {
@@ -83,7 +84,6 @@ public class TrainingScreen extends FighterScreen {
 
     @Override
     public void dispose () {
-        batch.dispose();
         player.dispose();
         dummy.dispose();
     }

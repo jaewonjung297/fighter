@@ -2,6 +2,7 @@ package com.jaewonjung.fighter.models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -11,9 +12,11 @@ import java.util.*;
 
 public class Player {
     private final Texture stillImage;
-    private final Texture runningImage;
+    private Texture runningImage;
     private final TextureRegion currentRegion;
+    private float time;
     public final Rectangle hitbox;
+    public final Animation<Texture> runningAnimation;
     public float velocityX;
     public float velocityY;
     public float gravity = (float) - 2000;
@@ -33,6 +36,7 @@ public class Player {
     public Player(Fighter game) {
         this.stillImage = new Texture("stick.png");
         this.runningImage = new Texture("stick_running.png");
+
         this.currentRegion = new TextureRegion(stillImage);
         this.playerStatus = PlayerStatus.STILL;
         this.hitbox = new Rectangle(368, 0, 30, 64);
@@ -46,9 +50,19 @@ public class Player {
         this.movingDirection = 0;
         this.keyTime = new long[4];
         this.game = game;
+        this.time = 0f;
+
+        Texture[] runFrames = new Texture[6];
+        for (int i = 0; i < 6; i++) {
+            runFrames[i] = new Texture("stickrun/000" + (i+1) + ".png");
+
+        }
+        this.runningAnimation = new Animation<Texture>(0.025f, runFrames);
+
         Arrays.fill(this.keyTime, -1);
     }
     public void update(ArrayList<Rectangle> platforms) {
+        time += Gdx.graphics.getDeltaTime();
         //update animation
         onPlatform = false;
         for (Rectangle platform: platforms) {
@@ -107,8 +121,9 @@ public class Player {
                 currentRegion.setRegion(stillImage);
                 break;
             case RUNNING:
+                runningImage = runningAnimation.getKeyFrame(time / 2, true);
                 currentRegion.setRegion(runningImage);
-        if ((facingDirection == -1 && currentRegion.isFlipX()) || (facingDirection != -1 && !currentRegion.isFlipX())) {
+        if ((facingDirection == 1 && currentRegion.isFlipX()) || (facingDirection != 1 && !currentRegion.isFlipX())) {
             currentRegion.flip(true, false);
         }
         }
@@ -117,7 +132,9 @@ public class Player {
 
     public void render(SpriteBatch batch) {
         updateCurrentRegion();
-        batch.draw(currentRegion, hitbox.x, hitbox.y);
+        int width = currentRegion.getRegionWidth();
+        int height = currentRegion.getRegionHeight();
+        batch.draw(currentRegion, hitbox.x, hitbox.y, 64, 108);//, 100, (int) (height / width) * 100);
     }
 
     public void dispose() {

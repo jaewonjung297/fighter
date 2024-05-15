@@ -22,14 +22,12 @@ public class IntroScreen extends FighterScreen {
     private Stage stage;
     private TextButton button;
     private TextButton.TextButtonStyle textButtonStyle;
-    private Skin skin;
 
     public IntroScreen (Fighter game) {
         super(game);
         glyphLayout = new GlyphLayout();
         stage = new Stage();
         textButtonStyle = new TextButton.TextButtonStyle();
-        skin = new Skin(Gdx.files.internal("skin.json"));
 
         textButtonStyle.font = game.font;
         textButtonStyle.fontColor = Color.BLACK;
@@ -37,6 +35,7 @@ public class IntroScreen extends FighterScreen {
         button = new TextButton("Training Mode", textButtonStyle);
         button.getLabel().setFontScale(2, 2);
         button.setPosition((game.dimensions[0] - button.getWidth()) /2,game.dimensions[1] / 5);
+        button.setVisible(false);
 
         button.addListener(new ClickListener() {
             public void clicked(InputEvent e, float x, float y) {
@@ -56,6 +55,10 @@ public class IntroScreen extends FighterScreen {
         stage.draw();
         time += delta;
         game.batch.begin();
+
+        if (time > 1) {
+            button.setVisible(true);
+        }
 
         float fontY = Math.min(game.dimensions[1] * 2 / 3, time * 500);
         float fontX = (game.dimensions[0] - glyphLayout.width) / 2;
